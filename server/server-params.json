@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey": "EnvironmentName",
+    "ParameterValue": "HighAval-WebApp"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "t2.medium"
+  },
+  {
+    "ParameterKey": "InstanceAmi",
+    "ParameterValue": "ami-02701bcdc5509e57b"
+  }
+]

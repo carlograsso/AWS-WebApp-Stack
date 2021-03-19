@@ -1,0 +1,57 @@
+Description: Carlo Grasso - Jumpbox to ssh access Ec2 istances in private subnets
+Parameters:
+  EnvironmentName:
+    Description: "Will be prefixed to all resources names."
+    Type: String
+  InstanceType:
+    Description: EC2 istance type to launch.
+    Type: String
+  InstanceAmi:
+    Description: Istance amazon machine image.
+    Type: String
+  IpFromSsh:
+    Description: Ip to allow ssh connection from
+    Type: String
+  KeyName:
+    Description: Keypair to access ec2 priv istances
+    Type: AWS::EC2::KeyPair::KeyName
+#################################
+Resources:
+  SGJumpBox:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow ssh connection to the jumpbox jumpbox from a choosen safe ip
+      VpcId:
+        Fn::ImportValue: !Sub "${EnvironmentName}-VpcId"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref IpFromSsh
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: name
+          Value: !Sub ${EnvironmentName} - Jumpbox Security Group
+  JumpBox:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref InstanceAmi
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SGJumpBox
+      SubnetId:
+        Fn::ImportValue: !Sub ${EnvironmentName}-Pub1SubNet
+      KeyName: !Ref KeyName
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-JumpBox
+Outputs:
+  JumpBox:
+    Description: JumpBox adress
+    Value: !Ref JumpBox
+    Export:
+      Name: !Sub ${EnvironmentName}-JumpBox

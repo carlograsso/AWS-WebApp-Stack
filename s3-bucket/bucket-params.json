@@ -1,0 +1,10 @@
+[
+  {
+    "ParameterKey": "EnvironmentName",
+    "ParameterValue": "HighAval-WebApp"
+  },
+  {
+    "ParameterKey": "BucketName",
+    "ParameterValue": "myca4rl0bucket"
+  }
+]
